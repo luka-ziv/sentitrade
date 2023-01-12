@@ -152,7 +152,21 @@ nav>ul {margin: 0;}
 }
 
 .button-blue-container {
-    text-align: center;
+    text-align: right;
+    float: left;
+    width: 50%;
+}
+#button-blue-donate {
+    float: left;
+    width: 48%;
+    text-align: right:
+    margin-right: 2%;
+}
+#button-blue-email {
+    float: left;
+    width: 48%;
+    text-align: left;
+    margin-left: 2%;
 }
 .button-blue {
     font-size: 20px;

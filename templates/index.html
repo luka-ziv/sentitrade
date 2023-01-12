@@ -36,8 +36,8 @@
         <h1 class="title">Optimize Trading with AI News Analysis</h1>
         <hr id="title-break">
         <p class="intro-blurb">
-            Using sentiment analysis to find the collective opinion of financial news for
-            thousands of stocks and cryptocurrencies in real time.
+            Using sentiment analysis to find the daily collective opinion of financial news for
+            individual stocks and cryptocurrencies.
         </p>
         <div class="button-white-container">
             <button class="button-white" type="button" onclick="window.open('{{ url_for('demo_get_request') }}','_blank')">
@@ -60,14 +60,23 @@
                     current date.
                     <br><br>
                     If you like this concept and would like to contribute to its completed development, please consider
-                    donating! All donations will be used solely for the purpose of development into a fully operational
-                    API with the capacity to support thousands of stocks and cryptocurrencies.
+                    donating! If a sufficient sum is acquired, donations will be used for the purpose of development
+                    into a fully operational API with the capacity to support thousands of stocks and cryptocurrencies.
+                    For business inquiries, please contact me directly!
                 </p>
-                <div class="button-blue-container">
+                <div id="button-blue-donate" class="button-blue-container">
                     <a href="{{ url_for('donate') }}">
                         <button class="button-blue" type="button">
-                            <span id="donate-icon" style="color: white;"><i class="fa-brands fa-bitcoin"></i></span>
+                            <span style="color: white;"><i class="fa-brands fa-bitcoin"></i></span>
                             Donate
+                        </button>
+                    </a>
+                </div>
+                <div id="button-blue-email" class="button-blue-container">
+                    <a href="mailto:lukaziv00@gmail.com" target="_blank" rel="noopener noreferrer">
+                        <button class="button-blue" type="button">
+                            <span style="color: white;"><i class="fa-solid fa-envelope"></i></span>
+                            Email
                         </button>
                     </a>
                 </div>
