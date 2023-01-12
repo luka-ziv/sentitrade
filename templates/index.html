@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cool Title</title>
+
+    <link href="../static/css/style.css" rel="stylesheet" />
+
+    <script src="https://kit.fontawesome.com/08f7cbdce4.js" crossorigin="anonymous"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <section id="header">
+        <header>
+            <nav>
+                <ul>
+                    <li class="navbar-item navbar-left navbar-name-item" id="navbar-name"><a class="anchor-redirects" href="{{ url_for('home') }}">SentiTrade API</a></li>
+<!--                    <li class="navbar-item navbar-right navbar-avatar-item"><img class="avatar" src="../static/images/headshot-luka-zivkovic.jpg" alt="Avatar"></li>-->
+                    <li class="navbar-item navbar-right navbar-button-item">
+                        <a href="{{ url_for('donate') }}">
+                            <button class="button-white" type="button">Donate</button>
+                        </a>
+                    </li>
+                    <li class="navbar-item navbar-right navbar-section-item"><a class="anchor-redirects" href="#description">How it Works</a></li>
+                    <li class="navbar-item navbar-right navbar-section-item"><a class="anchor-redirects" href="#documentation">Documentation</a></li>
+                </ul>
+            </nav>
+        </header>
+    </section>
+
+    <hr class="separator-1">
+
+    <section id="introduction">
+        <h1 class="title">Optimize Trading with AI News Analysis</h1>
+        <hr id="title-break">
+        <p class="intro-blurb">
+            Using sentiment analysis to find the collective opinion of financial news for
+            thousands of stocks and cryptocurrencies in real time.
+        </p>
+        <div class="button-white-container">
+            <button class="button-white" type="button" onclick="window.open('{{ url_for('demo_get_request') }}','_blank')">
+                <span style="color: white;"><i class="fa-solid fa-code-pull-request"></i></span>
+                Demo Request
+            </button>
+        </div>
+    </section>
+
+    <section id="authors-message">
+        <h2 class="section-headers">Author's Message</h2>
+        <div class="author-row">
+            <div class="author-col-img">
+                <img class="author-img" src="../static/images/headshot-luka-zivkovic.jpg" alt="Avatar">
+            </div>
+            <div class="author-col-content">
+                <p>Hi there! My name is Luka. As a disclaimer, I must announce that SentiTrade API is only a prototype
+                    at present. Therefore, in its current state, it only supports requests for Bitcoin (BTC) and
+                    Ethereum (ETH) sentiment scores for any day starting from January 1, 2023, until the day before the
+                    current date.
+                    <br><br>
+                    If you like this concept and would like to contribute to its completed development, please consider
+                    donating! All donations will be used solely for the purpose of development into a fully operational
+                    API with the capacity to support thousands of stocks and cryptocurrencies.
+                </p>
+                <div class="button-blue-container">
+                    <a href="{{ url_for('donate') }}">
+                        <button class="button-blue" type="button">
+                            <span id="donate-icon" style="color: white;"><i class="fa-brands fa-bitcoin"></i></span>
+                            Donate
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--    <hr class="separator-2">-->
+
+    <section id="description">
+        <h2 class="section-headers">How it Works</h2>
+        <p class="wide-paragraph">
+            This JSON web-API uses natural language processing (NLP) sentiment analysis (<a class="anchor-citations"
+            href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550" target="_blank">Lo, 2009</a>)
+            to extract a collective score that represents the average sentiment of a collection of articles pertaining
+            to a specific stock or cryptocurrency. It is specifically derived from the "Valence Aware Dictionary for
+            Sentiment Analysis" (VADER) method (<a class="anchor-citations" href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550"
+            target="_blank">Hutto & Gilbert, 2014</a>), which produces a normalized compound score between -1 and 1.
+            This represents a range of sentiment strengths where 0 indicates a neutral connotation of a body of text,
+            and the poles correspond to the upper limits of negative and positive connotations. VADER will not be
+            explained in depth here since there is an abundance of existing literature on the topic. However, I have
+            provided links for further reading in the present citations.
+        </p>
+        <p class="wide-paragraph">
+            SentiTrade uses a news API to extract hundreds of articles about an asset of your choice. Next, it computes
+            the mean valence sum of all the article headlines specified. The mean valence sum is then normalized (-1 <
+            &#119909; < 1) using a modified version of the VADER score formula. The unadjusted VADER compound score is
+            normalized using the following formula.<br>
+        </p>
+        <div style="text-align: center; font-size: 1.5em;">
+            \(x = \frac{s}{\sqrt{s^2 + 15}}\)<br>
+            <span style="font-size: 0.75rem;">where, \(s\) is the valence sum for any given text, and \(x\) is the
+            normalized VADER score.</span>
+        </div><br>
+        <p class="wide-paragraph">
+            However, since we have applied this scoring system to news headlines, we can introduce a new factor that
+            accounts for the popularity or relevancy of an asset in a bidirectional manner (both positive and negative
+            sentiments). Therefore, I have introduced a modification to the VADER score which yields a new formula that
+            is defined additionally in terms of the number of articles retrieved for any given asset. When less
+            articles are available, we can reasonably assume there is not much "buzz" about the topic and thus, the
+            formula punishes the sentiment score, reducing it to a more "neutral" score (closer to zero). Since the
+            additional factor only scales the value, it does not influence directionality, but only magnitude. The
+            modified score is defined as follows.<br>
+        </p>
+        <div style="text-align: center; font-size: 1.5em;">
+            \(x = \frac{\mu_s}{\sqrt{\mu_s^2 + 15 + \frac{30}{n}}}\)<br>
+            <span style="font-size: 0.75rem;">where, \(\mu_s\) is the mean valence sum among all article headlines
+                retrieved, \(x\) is the modified sentiment score, and \(n\) is the number of articles retrieved.
+            </span>
+        </div><br>
+        <p class="wide-paragraph">
+            This adjusted index, newly termed the "Darth VADER" score (dVADER), chokes the sentiment index in cases of
+            low article availability, indicating both unreliability given low sample size, as well as low popularity,
+            assumed to also be correlated with overall opinion or sentiment. The following plot compares the unmodified
+            VADER score with only 1 retrieved article, against the dVADER version also at 1 retrieved article.
+        </p>
+        <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~lukaziv00/1.embed?showlink=false"></iframe>
+        <p class="wide-paragraph">
+            Clearly, the dVADER method punishes the score for low article count. Although not shown here, as more
+            articles are included in the calculation, the line approaches the original VADER curve; thus, providing an
+            additional useful dimension for investigating sentiment of news headlines.
+        </p><br>
+    </section>
+
+    <hr class="separator-2">
+
+    <section id="documentation">
+        <h2 class="section-headers">Documentation</h2>
+        <p class="wide-paragraph">
+            Getting started with the SentiTrade API is very simple! Using an HTTP GET request, you can access the data
+            in JSON format using the following endpoint and parameters.
+        </p>
+        <h3 class="sub-headers">Endpoint</h3>
+        <div class="request-row">
+            <div class="request-column">
+                <button class="get-request">GET</button>
+            </div>
+            <div class="endpoint-column">
+                <code>https://url-base/endpoint</code>
+            </div>
+        </div>
+        <h3 class="sub-headers">Parameters</h3>
+        <div id="param-1-row" class="params-row">
+            <div class="param-name-column">
+                <p class="param-name"><code>symbol</code><br><span class="required-param">required</span></p>
+            </div>
+            <div class="param-desc-column">
+                <p class="param-desc">Ticker code of the selected stock or cryptocurrency. For example, Bitcoin is
+                represented as "BTC", or Ethereum as "ETH". Prototype API currently only supports Bitcoin and Ethereum.</p>
+            </div>
+        </div>
+        <div id="param-2-row" class="params-row">
+            <div class="param-name-column">
+                <p class="param-name"><code>date</code><br><span class="required-param">required</span></p>
+            </div>
+            <div class="param-desc-column">
+                <p class="param-desc">The date from which you would like to retrieve the sentiment score. Calculation
+                of sentiment uses articles from 00:00 to 23:59 on the date specified. Date must be in ISO-8601 format,
+                separated with a hyphen: YYYY-MM-DD. For example, January 2, 2023 would be written as "2023-01-02".
+                Prototype API currently only supports dates starting from 2023-01-01 until the day before the current
+                date.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-column">
+            <ul>
+                <li class="footer-heading">Other</li>
+                <li class="footer-item"><a class="anchor-redirects" href="{{ url_for('coming_soon') }}" target="_blank">
+                    <i class="fa-solid fa-user"></i> Personal Site</a></li>
+                <li class="footer-item"><a class="anchor-redirects" href="{{ url_for('coming_soon') }}" target="_blank">
+                    <i class="fa-solid fa-pencil"></i> Blog</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <ul>
+                <li class="footer-heading">Socials</li>
+                <li class="footer-item"><a class="anchor-redirects" href="https://www.linkedin.com/in/lukaziv/" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+                <li class="footer-item"><a class="anchor-redirects" href="https://twitter.com/lukaziv00" target="_blank">
+                    <i class="fa-brands fa-twitter"></i> Twitter</a></li>
+                <li class="footer-item"><a class="anchor-redirects" href="https://github.com/luka-ziv" target="_blank">
+                    <i class="fa-brands fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
