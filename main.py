@@ -29,11 +29,6 @@ def demo_get_request(request: Request):
     return RedirectResponse(redirect_url)
 
 
-@app.route('/donate')
-def donate(request: Request):
-    return templates.TemplateResponse('donation.html', {'request': request})
-
-
 @app.route('/coming-soon')
 def coming_soon(request: Request):
     return templates.TemplateResponse('coming_soon.html', {'request': request})
