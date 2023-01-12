@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from starlette.responses import RedirectResponse
 from starlette.datastructures import URL
 from fastapi.templating import Jinja2Templates

@@ -1,5 +1,3 @@
-import nltk
-from nltk.corpus import stopwords as sw
 from nltk.sentiment.vader import SentimentIntensityAnalyzer, SentiText
 import numpy as np
 import pandas as pd
@@ -65,19 +63,19 @@ def unbake(sentence):
 
 
 def decontract(sentence):
-    return contractions.fix(sentence)    # Works like a charm :) Decodes from mojibake if baked already.
+    return contractions.fix(sentence)
 
 
 def depunctuate(sentence):
     return sentence.translate(str.maketrans('', '', string.punctuation))
 
 
-def remove_stopwords(sentence):
-    token = nltk.word_tokenize(sentence)
-    stopwords = sw.words('english')
-    filtered_list = [word for word in token if word not in stopwords]
-    filtered = ' '.join(filtered_list)
-    return filtered
+# def remove_stopwords(sentence):
+#     token = nltk.word_tokenize(sentence)
+#     stopwords = sw.words('english')
+#     filtered_list = [word for word in token if word not in stopwords]
+#     filtered = ' '.join(filtered_list)
+#     return filtered
 
 
 def vader_cleaning(sentences):
