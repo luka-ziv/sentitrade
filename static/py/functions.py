@@ -43,7 +43,7 @@ def get_headlines(symbol, from_date, to_date):
     titles = []
     for page in range(1, 6):
         try:
-            news = newsapi.NewsApiClient(api_key=os.getenv('news_api_key'))
+            news = newsapi.NewsApiClient(api_key=os.getenv('NEWS_API_KEY'))
             articles = news.get_everything(
                 q=f'{symbol} OR {name}',    # Use the stock symbol as well. Get from other API.
                 language='en',
@@ -148,7 +148,7 @@ def adjust_vader_score(valence_sum, num_articles):
 def compute_sentiment_score(symbol, from_date=None, to_date=None):
     titles = get_headlines(symbol, from_date, to_date)
     if not titles:
-        return None, None
+        return 0.00, 0
     cleaned = vader_cleaning(titles)
     return adj_vader_scores(cleaned), len(titles)
 
@@ -193,12 +193,12 @@ def get_valence_sum(text):
 def daily_db_fill(date):
     try:
         connection = mariadb.connect(
-            user=os.getenv('db_username'),
-            passwd=os.getenv('db_password'),
-            host=os.getenv('db_host'),
-            port=os.getenv('db_port'),
+            user=os.getenv('DB_USERNAME'),
+            passwd=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=os.getenv('DB_PORT'),
             ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
-            database=os.getenv('db_name')
+            database=os.getenv('DB_NAME')
         )
     except mariadb.Error as error:
         print(f'Error connecting to DB: {error}')
@@ -211,8 +211,6 @@ def daily_db_fill(date):
             from_date=date,
             to_date=date
         )
-        if score is None:
-            continue
         cursor.execute(
             f'INSERT INTO {coin} (Date, Score, NumArticles) VALUES("{date[0]}-{date[1]}-{date[2]}", {score}, {num_articles});')
     connection.commit()
@@ -222,12 +220,12 @@ def daily_db_fill(date):
 def get_request_results(symbol, date):
     try:
         connection = mariadb.connect(
-            user=os.getenv('db_username'),
-            passwd=os.getenv('db_password'),
-            host=os.getenv('db_host'),
-            port=os.getenv('db_port'),
+            user=os.getenv('DB_USERNAME'),
+            passwd=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=int(os.getenv('DB_PORT')),
             ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
-            database=os.getenv('db_name')
+            database=os.getenv('DB_NAME')
         )
     except mariadb.Error as error:
         print(f'Error connecting to DB: {error}')

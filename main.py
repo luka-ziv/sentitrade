@@ -34,7 +34,6 @@ def coming_soon(request: Request):
     return templates.TemplateResponse('coming_soon.html', {'request': request})
 
 
-
 startup = str(dt.date.today()).split('-')
 NEXT_DB_UPDATE = dt.datetime(year=int(startup[0]), month=int(startup[1]), day=int(startup[2])) + dt.timedelta(days=1, hours=1)
 @app.on_event('startup')
@@ -50,3 +49,12 @@ def daily_db_update():
         date = str(dt.date.today() - dt.timedelta(days=1)).split('-')
         fns.daily_db_fill(date=(int(date[0]), int(date[1]), int(date[2])))
         NEXT_DB_UPDATE += dt.timedelta(days=1)
+
+
+@app.on_event('startup')
+def run_locally():
+    try:
+        import envvars
+        envvars.set_env_vars()
+    except:
+        pass
