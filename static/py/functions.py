@@ -11,6 +11,7 @@ import newsapi
 import json
 import mariadb
 import os
+from fastapi import HTTPException
 
 
 def get_headlines(symbol, from_date, to_date):
@@ -233,7 +234,13 @@ def get_request_results(symbol, date):
 
     cursor = connection.cursor()
     cursor.execute(f'SELECT Score, NumArticles FROM {symbol} WHERE Date="{date}";')
+    results = None
     for (score, num_articles) in cursor:
         results = (score, num_articles)
     connection.close()
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            headers={'Error': 'Invalid search parameters.'},
+            detail='No items found that match the search parameters you entered.')
     return {"symbol": symbol, "score": results[0], "num_articles": results[1], "date": date}
