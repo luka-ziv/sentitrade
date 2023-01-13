@@ -15,11 +15,13 @@ templates = Jinja2Templates(directory='templates')
 
 @app.route('/')
 def home(request: Request):
+    fns.add_site_stats(view=True)
     return templates.TemplateResponse('index.html', {'request': request})
 
 
 @app.get('/endpoint')
 def get_request(symbol, date):
+    fns.add_site_stats(request=True)
     return fns.get_request_results(symbol=symbol.upper(), date=date)
 
 

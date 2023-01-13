@@ -146,6 +146,7 @@ def adjust_vader_score(valence_sum, num_articles):
 
 def compute_sentiment_score(symbol, from_date=None, to_date=None):
     titles = get_headlines(symbol, from_date, to_date)
+    print(titles)
     if not titles:
         return 0.00, 0
     cleaned = vader_cleaning(titles)
@@ -242,3 +243,74 @@ def get_request_results(symbol, date):
             headers={'Error': 'Invalid search parameters.'},
             detail='No items found that match the search parameters you entered.')
     return {"symbol": symbol, "score": results[0], "num_articles": results[1], "date": date}
+
+
+def add_site_stats(view=False, request=False):
+    if view == request:
+        return
+
+    try:
+        connection = mariadb.connect(
+            user=os.getenv('DB_USERNAME'),
+            passwd=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=int(os.getenv('DB_PORT')),
+            ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
+            database=os.getenv('DB_NAME')
+        )
+    except mariadb.Error as error:
+        print(f'Error connecting to DB: {error}')
+        return
+
+    cursor = connection.cursor()
+    date = datetime.date.today()
+    year = date.year
+    month = date.month
+    day = date.day
+    print(year, month, day)
+
+    # Need to check if item for this date already exist in DB to avoid error.
+    empty_row = True
+    cursor.execute(f'SELECT Date FROM stats WHERE Date="{date}";')
+    for date in cursor:
+        empty_row = False
+
+    # Initialize row if empty.
+    if empty_row:
+        cursor.execute('SELECT MAX(id) FROM stats;')
+        result = None
+        for id in cursor:
+            result = id[0]
+        if not result:
+            # Case where table is empty.
+            cursor.execute(
+                f'INSERT INTO stats (Date) VALUES("{date}");')
+        else:
+            cursor.execute(f'SELECT MainViewsToDate, RequestsToDate FROM stats WHERE id={result};')
+            results = None
+            for (total_views, total_requests) in cursor:
+                results = (total_views, total_requests)
+            cursor.execute(f'INSERT INTO stats (Date, MainViewsToDate, RequestsToDate) VALUES("{date}", {results[0]}, {results[1]});')
+    connection.commit()
+
+    # All other columns receive default value of 0 if nothing committed already.
+    if view:
+        cursor.execute(f'SELECT MainPageViews, MainViewsToDate FROM stats WHERE Date="{year}-{month}-{day}";')
+        results = None
+        for (views, total) in cursor:
+            results = (views, total)
+        updated_views = int(results[0]) + 1
+        updated_total = int(results[1]) + 1
+        cursor.execute(f'UPDATE stats SET MainPageViews={updated_views}, MainViewsToDate={updated_total} WHERE Date="{year}-{month}-{day}";')
+
+    if request:
+        cursor.execute(f'SELECT NumRequests, RequestsToDate FROM stats WHERE Date="{year}-{month}-{day}";')
+        results = None
+        for (reqs, total) in cursor:
+            results = (reqs, total)
+        updated_reqs = int(results[0]) + 1
+        updated_total = int(results[1]) + 1
+        cursor.execute(f'UPDATE stats SET NumRequests={updated_reqs}, RequestsToDate={updated_total} WHERE Date="{year}-{month}-{day}";')
+
+    connection.commit()
+    connection.close()
