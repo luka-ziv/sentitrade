@@ -5,7 +5,7 @@ import contractions
 import ftfy
 import string
 import datetime
-import newsapi
+import newsapi.newsapi_client as newsapi
 import json
 import mariadb
 import os
@@ -267,7 +267,6 @@ def add_site_stats(view=False, request=False):
     year = date.year
     month = date.month
     day = date.day
-    print(year, month, day)
 
     # Need to check if item for this date already exist in DB to avoid error.
     empty_row = True
