@@ -20,7 +20,7 @@
                     <li class="navbar-item navbar-left navbar-name-item" id="navbar-name"><a class="anchor-redirects" href="{{ url_for('home') }}">SentiTrade API</a></li>
 <!--                    <li class="navbar-item navbar-right navbar-avatar-item"><img class="avatar" src="../static/images/headshot-luka-zivkovic.jpg" alt="Avatar"></li>-->
                     <li class="navbar-item navbar-right navbar-button-item">
-                        <a href="https://www.paypal.com/donate/?business=QQRKHRD5ZVKBG&no_recurring=0&currency_code=CAD" target="_blank">
+                        <a href="https://www.paypal.com/donate/?business=QQRKHRD5ZVKBG&no_recurring=0&item_name=If+you+wish+to+contribute+to+the+further+development+and+completion+of+SentiTrade+API%2C+you+can+donate+here%21&currency_code=CAD" target="_blank">
                             <button class="button-white" type="button">Donate</button>
                         </a>
                     </li>
@@ -60,13 +60,13 @@
                     Ethereum (ETH) sentiment scores for any day starting from January 1, 2023, until the day before the
                     current date.
                     <br><br>
-                    If you like this concept and would like to contribute to its completed development, please consider
-                    donating! If a sufficient sum is acquired, donations will be used for the purpose of development
-                    into a fully operational API with the capacity to support thousands of stocks and cryptocurrencies.
-                    For business inquiries, please contact me directly!
+                    If you like this concept and would like to contribute to its completion, please consider
+                    donating! Donations will be used for further development, which could transform SentiTrade
+                    into a fully operational JSON API with the capacity to support thousands of stocks and cryptocurrencies
+                    in real time, as opposed to static daily scores. For business inquiries, please contact me directly!
                 </p>
                 <div id="button-blue-donate" class="button-blue-container">
-                    <a href="https://www.paypal.com/donate/?business=QQRKHRD5ZVKBG&no_recurring=0&currency_code=CAD" target="_blank">
+                    <a href="https://www.paypal.com/donate/?business=QQRKHRD5ZVKBG&no_recurring=0&item_name=If+you+wish+to+contribute+to+the+further+development+and+completion+of+SentiTrade+API%2C+you+can+donate+here%21&currency_code=CAD" target="_blank">
                         <button class="button-blue" type="button">
                             <span style="color: white;"><i class="fa-brands fa-bitcoin"></i></span>
                             Donate
@@ -90,19 +90,19 @@
     <section id="description">
         <h2 class="section-headers">How it Works</h2>
         <p class="wide-paragraph">
-            This JSON web-API uses natural language processing (NLP) sentiment analysis (<a class="anchor-citations"
+            This JSON web-API uses natural language processing sentiment analysis (<a class="anchor-citations"
             href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550" target="_blank">Lo, 2009</a>)
-            to extract a collective score that represents the average sentiment of a collection of articles pertaining
+            to extract a collective score that represents the average opinion of a collection of articles pertaining
             to a specific stock or cryptocurrency. It is specifically derived from the "Valence Aware Dictionary for
             Sentiment Analysis" (VADER) method (<a class="anchor-citations" href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550"
             target="_blank">Hutto & Gilbert, 2014</a>), which produces a normalized compound score between -1 and 1.
             This represents a range of sentiment strengths where 0 indicates a neutral connotation of a body of text,
-            and the poles correspond to the upper limits of negative and positive connotations. VADER will not be
-            explained in depth here since there is an abundance of existing literature on the topic. However, I have
-            provided links for further reading in the present citations.
+            and both -1 and 1 correspond to the maximum negative and positive article connotations, respectively.
+            VADER will not be explained in depth here since there is an abundance of existing literature on the topic.
+            However, I have provided links for further reading in the present citations.
         </p>
         <p class="wide-paragraph">
-            SentiTrade uses a news API to extract hundreds of articles about an asset of your choice. Next, it computes
+            SentiTrade extracts hundreds of articles about an asset of your choice. Next, it computes
             the mean valence sum of all the article headlines specified. The mean valence sum is then normalized (-1 <
             &#119909; < 1) using a modified version of the VADER score formula. The unadjusted VADER compound score is
             normalized using the following formula.<br>
@@ -137,8 +137,8 @@
         <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~lukaziv00/1.embed?showlink=false"></iframe>
         <p class="wide-paragraph">
             Clearly, the dVADER method punishes the score for low article count. Although not shown here, as more
-            articles are included in the calculation, the line approaches the original VADER curve; thus, providing an
-            additional useful dimension for investigating sentiment of news headlines.
+            articles are included in the sample calculation, the line approaches the original VADER curve; thus,
+            providing an additional useful dimension for investigating sentiment of news headlines.
         </p><br>
     </section>
 
