@@ -197,7 +197,6 @@ def daily_db_fill(date):
             passwd=os.getenv('DB_PASSWORD'),
             host=os.getenv('DB_HOST'),
             port=os.getenv('DB_PORT'),
-            ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
             database=os.getenv('DB_NAME')
         )
     except mariadb.Error as error:
@@ -224,7 +223,6 @@ def get_request_results(symbol, date):
             passwd=os.getenv('DB_PASSWORD'),
             host=os.getenv('DB_HOST'),
             port=int(os.getenv('DB_PORT')),
-            ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
             database=os.getenv('DB_NAME')
         )
     except mariadb.Error as error:
@@ -255,7 +253,6 @@ def add_site_stats(view=False, request=False):
             passwd=os.getenv('DB_PASSWORD'),
             host=os.getenv('DB_HOST'),
             port=int(os.getenv('DB_PORT')),
-            ssl_ca='C:/Program Files/MariaDB 10.10/skysql_chain.pem',
             database=os.getenv('DB_NAME')
         )
     except mariadb.Error as error:
