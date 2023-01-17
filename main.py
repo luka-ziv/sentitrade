@@ -22,7 +22,7 @@ def home(request: Request):
 @app.get('/endpoint')
 def get_request(symbol, date):
     fns.add_site_stats(request=True)
-    return fns.get_request_results(symbol=symbol.upper(), date=date)
+    return fns.get_request_results(symbol=symbol.lower(), date=date)
 
 
 @app.route('/demo')
