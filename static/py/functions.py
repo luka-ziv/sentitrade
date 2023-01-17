@@ -10,6 +10,7 @@ import json
 import mariadb
 import os
 from fastapi import HTTPException
+import pytz
 
 
 def get_headlines(symbol, from_date, to_date):
@@ -260,14 +261,14 @@ def add_site_stats(view=False, request=False):
         return
 
     cursor = connection.cursor()
-    date = datetime.date.today()
+    date = datetime.datetime.now(pytz.timezone('EST'))
     year = date.year
     month = date.month
     day = date.day
 
     # Need to check if item for this date already exist in DB to avoid error.
     empty_row = True
-    cursor.execute(f'SELECT Date FROM stats WHERE Date="{date}";')
+    cursor.execute(f'SELECT Date FROM stats WHERE Date="{year}-{month}-{day}";')
     for date in cursor:
         empty_row = False
 
@@ -280,13 +281,13 @@ def add_site_stats(view=False, request=False):
         if not result:
             # Case where table is empty.
             cursor.execute(
-                f'INSERT INTO stats (Date) VALUES("{date}");')
+                f'INSERT INTO stats (Date) VALUES("{year}-{month}-{day}");')
         else:
             cursor.execute(f'SELECT MainViewsToDate, RequestsToDate FROM stats WHERE id={result};')
             results = None
             for (total_views, total_requests) in cursor:
                 results = (total_views, total_requests)
-            cursor.execute(f'INSERT INTO stats (Date, MainViewsToDate, RequestsToDate) VALUES("{date}", {results[0]}, {results[1]});')
+            cursor.execute(f'INSERT INTO stats (Date, MainViewsToDate, RequestsToDate) VALUES("{year}-{month}-{day}", {results[0]}, {results[1]});')
     connection.commit()
 
     # All other columns receive default value of 0 if nothing committed already.
