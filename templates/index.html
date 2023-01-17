@@ -93,28 +93,22 @@
             natural language processing sentiment analysis (<a class="anchor-citations"
             href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550" target="_blank">Lo, 2009</a>) to deduce a
             collective score that represents the average opinion of a collection of articles pertaining to a specific
-            stock or cryptocurrency. The method used is specifically derived from the "Valence Aware Dictionary for
-            Sentiment Analysis" (VADER) method (<a class="anchor-citations" href="https://ojs.aaai.org/index.php/ICWSM/article/view/14550"
-            target="_blank">Hutto & Gilbert, 2014</a>), which produces a normalized compound score between -1 and 1.
+            stock or cryptocurrency. This method produces a normalized compound score between -1 and 1.
             This represents a range of sentiment strengths where 0 indicates a neutral opinion in a body of text,
-            and both -1 and 1 correspond to the maximum negative and positive article connotations, respectively.
-            However, since we have applied this scoring system to news headlines, a new factor has been introduced to
+            whereas -1 and 1 correspond to the maximum negative and positive article connotations, respectively.
+            Furthermore, since we have applied this scoring system to news headlines, a new factor has been introduced to
             account for the popularity or relevancy of an asset at any given time, additionally defining the sentiment
             score formula in terms of the number of articles retrieved.
         </p>
         <p class="wide-paragraph">
-            This adjusted index, newly termed the "Darth VADER" score (dVADER), chokes the sentiment index in cases of
-            low article count. When less articles are available, we assume a reduced social "buzz" surrounding the
-            topic and thus, the formula punishes the sentiment score, reducing it to a more "neutral" state (closer to
-            zero). Low article count indicates both unreliability of produced sentiment scores given low sample size,
-            as well as low popularity. The following plot compares the unmodified VADER score with only 1 retrieved
-            article, against the dVADER version also at 1 retrieved article.
-        </p>
-        <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~lukaziv00/1.embed?showlink=false"></iframe>
-        <p class="wide-paragraph">
-            Clearly, the dVADER method punishes the score for a low article availability. Although not shown here, as more
-            articles are included in the sample calculation, the line approaches the original VADER curve; thus,
-            providing an additional useful dimension for estimating the collective opinion of news headlines.
+            When fewer articles are available, we assume a reduced social "buzz" surrounding the topic and thus, the
+            formula punishes the sentiment score, reducing it to a more "neutral" state (closer to zero). Low article
+            count indicates both unreliability of calculated sentiment values given low sample size, as well as low
+            popularity. As more articles are included in the sample calculation, the score receives a scaled boost in
+            the appropriate direction (positive or negative). This novel index, termed the "Zed" score, provides an
+            additional useful dimension for estimating market movements and financial news opinions on a regular basis.
+            The SentiTrade API has the potential to be implemented by developers in a variety of ways to significantly
+            benefit traders.
         </p><br>
     </section>
 
