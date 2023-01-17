@@ -241,7 +241,7 @@ def get_request_results(symbol, date):
             status_code=404,
             headers={'Error': 'Invalid search parameters.'},
             detail='No items found that match the search parameters you entered.')
-    return {"symbol": symbol, "score": results[0], "num_articles": results[1], "date": date}
+    return {"symbol": symbol.upper(), "score": results[0], "num_articles": results[1], "date": date}
 
 
 def add_site_stats(view=False, request=False):
