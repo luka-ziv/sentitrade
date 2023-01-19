@@ -50,10 +50,15 @@ def daily_db_update():
     now_time = now.split()[1]
     next_date = str(NEXT_DB_UPDATE)[:-3].split()[0]
     next_time = str(NEXT_DB_UPDATE)[:-3].split()[1]
+    print('DB Update Date:', now_date == next_date)
+    print('DB Update Time:', now_time[:2] == next_time[:2])
     if now_date == next_date and now_time[:2] == next_time[:2]:
         date = str(datetime.datetime.now(pytz.timezone('EST')) - datetime.timedelta(days=1)).split()[0].split('-')
+        print('Filling...')
         fns.daily_db_fill(date=(int(date[0]), int(date[1]), int(date[2])))
+        print('DB Filled.')
         NEXT_DB_UPDATE += datetime.timedelta(days=1)
+        print('Next fill:', NEXT_DB_UPDATE)
 
 
 @app.on_event('startup')

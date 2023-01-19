@@ -147,7 +147,6 @@ def adjust_vader_score(valence_sum, num_articles):
 
 def compute_sentiment_score(symbol, from_date=None, to_date=None):
     titles = get_headlines(symbol, from_date, to_date)
-    print(titles)
     if not titles:
         return 0.00, 0
     cleaned = vader_cleaning(titles)
@@ -193,26 +192,29 @@ def get_valence_sum(text):
 
 def daily_db_fill(date):
     try:
+        print('Connecting to DB...')
         connection = mariadb.connect(
             user=os.getenv('DB_USERNAME'),
             passwd=os.getenv('DB_PASSWORD'),
             host=os.getenv('DB_HOST'),
-            port=os.getenv('DB_PORT'),
+            port=int(os.getenv('DB_PORT')),
             database=os.getenv('DB_NAME')
         )
+        print('Connected.')
     except mariadb.Error as error:
         print(f'Error connecting to DB: {error}')
         return
 
     cursor = connection.cursor()
     for coin in ['BTC', 'ETH']:
+        print(f'Computing {coin} score...')
         score, num_articles = compute_sentiment_score(
             symbol=coin,
             from_date=date,
             to_date=date
         )
-        cursor.execute(
-            f'INSERT INTO {coin} (Date, Score, NumArticles) VALUES("{date[0]}-{date[1]}-{date[2]}", {score}, {num_articles});')
+        cursor.execute(f'INSERT INTO {coin.lower()} (Date, Score, NumArticles) VALUES("{date[0]}-{date[1]}-{date[2]}", {score}, {num_articles});')
+        print(f'Operation complete ({coin}).')
     connection.commit()
     connection.close()
 
