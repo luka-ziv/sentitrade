@@ -83,6 +83,9 @@ def vader_cleaning(sentences):
     sentences = check_convert_type(sentences, 'string')
     clean_titles = []
     for sentence in sentences:
+        if sentence is None:
+            # Error case where item in list from NewsAPI is None type. Happened once. Very weird.
+            continue
         unbaked = unbake(sentence)
         expanded = decontract(unbaked)
         clean_titles.append(expanded)
@@ -150,7 +153,7 @@ def compute_sentiment_score(symbol, from_date=None, to_date=None):
     if not titles:
         return 0.00, 0
     cleaned = vader_cleaning(titles)
-    return adj_vader_scores(cleaned), len(titles)
+    return adj_vader_scores(cleaned), len(cleaned)
 
 
 def get_valence_sum(text):
