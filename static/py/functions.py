@@ -26,17 +26,17 @@ def get_headlines(symbol, from_date, to_date):
         # make error if even this one does not show up. Won't happen because user selects from pre-written list.
     if from_date is not None:
         from_date = datetime.datetime(
-            year=from_date[0],
-            month=from_date[1],
-            day=from_date[2],
+            year=int(from_date[0]),
+            month=int(from_date[1]),
+            day=int(from_date[2]),
             hour=0,
             minute=0
         ).isoformat()
     if to_date is not None:
         to_date = datetime.datetime(
-            year=to_date[0],
-            month=to_date[1],
-            day=to_date[2],
+            year=int(to_date[0]),
+            month=int(to_date[1]),
+            day=int(to_date[2]),
             hour=23,
             minute=59
         ).isoformat()
